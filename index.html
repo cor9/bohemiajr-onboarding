@@ -9,508 +9,1101 @@
 <link rel="icon" type="image/png" href="BOHEMIAJR.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@600&family=Georgia&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1a1a1a;
-    --coral: #f2705f;
-    --sky: #4fb3d9;
-    --paper: #fdfcf9;
-    --paper-dim: #f3f1ea;
+    --ink: #14161a;
+    --ink-soft: #4d545c;
+    --ink-faint: #8b9198;
+    --coral: #ef6b58;
+    --coral-deep: #cf4b38;
+    --coral-wash: #fdeeeb;
+    --sky: #3fa9d4;
+    --sky-deep: #2682a9;
+    --sky-wash: #e9f5fb;
+    --paper: #fbfaf7;
+    --card: #ffffff;
+    --line: #e7e3da;
+    --dim: #f4f1ea;
+    --topbar-h: 56px;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(20,22,26,.04), 0 6px 20px rgba(20,22,26,.05);
   }
+
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
     background: var(--paper);
     color: var(--ink);
-    font-family: Georgia, 'Times New Roman', serif;
-    line-height: 1.6;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.68;
+    -webkit-font-smoothing: antialiased;
   }
-  header.hero {
-    background: linear-gradient(120deg, #23303a, #3a2b2b);
-    color: #fff;
-    text-align: center;
-    padding: 64px 20px 40px;
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: var(--sky-deep); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:hover { color: var(--coral-deep); }
+
+  /* ---------- reading progress ---------- */
+  .progress-track {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px;
+    background: transparent; z-index: 60; pointer-events: none;
   }
-  header.hero img {
-    width: 110px;
-    margin-bottom: 18px;
+  .progress-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--sky), var(--coral));
+    transition: width .1s linear;
   }
-  header.hero h1 {
-    font-family: 'Caveat', cursive;
-    font-size: 3rem;
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+    background: rgba(251,250,247,.92);
+    backdrop-filter: saturate(160%) blur(10px);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 16px; z-index: 50;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-width: 0; }
+  .brand img { width: 30px; flex: none; }
+  .brand span {
+    font-family: 'Special Elite', monospace; font-size: .86rem;
+    letter-spacing: .04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .topbar-spacer { flex: 1; }
+  .topbar-contact {
+    font-size: .8rem; font-weight: 600; color: var(--ink-soft);
+    text-decoration: none; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--card); white-space: nowrap;
+  }
+  .topbar-contact:hover { border-color: var(--coral); color: var(--coral-deep); }
+  .nav-toggle {
+    display: none; align-items: center; gap: 7px;
+    font-family: 'Inter', sans-serif; font-size: .82rem; font-weight: 600;
+    background: var(--ink); color: #fff; border: 0; cursor: pointer;
+    padding: 9px 15px; border-radius: 999px;
+  }
+
+  /* ---------- layout ---------- */
+  .layout {
+    display: grid; grid-template-columns: 272px minmax(0, 1fr);
+    gap: 48px; max-width: 1180px; margin: 0 auto;
+    padding: calc(var(--topbar-h) + 28px) 28px 120px;
+  }
+
+  /* ---------- sidebar ---------- */
+  .sidebar { position: sticky; top: calc(var(--topbar-h) + 28px); align-self: start; max-height: calc(100vh - var(--topbar-h) - 56px); display: flex; flex-direction: column; }
+  .search-wrap { position: relative; margin-bottom: 18px; flex: none; }
+  .search-wrap input {
+    width: 100%; font-family: inherit; font-size: .88rem;
+    padding: 11px 14px 11px 36px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  }
+  .search-wrap input:focus { outline: 2px solid var(--sky); outline-offset: -1px; border-color: transparent; }
+  .search-wrap::before {
+    content: "⌕"; position: absolute; left: 13px; top: 50%; transform: translateY(-52%);
+    color: var(--ink-faint); font-size: 1.15rem; pointer-events: none;
+  }
+  .side-nav { overflow-y: auto; padding-right: 6px; scrollbar-width: thin; }
+  .nav-group { margin-bottom: 20px; }
+  .nav-group-title {
+    font-family: 'Special Elite', monospace; font-size: .68rem;
+    text-transform: uppercase; letter-spacing: .13em; color: var(--ink-faint);
+    margin: 0 0 7px 12px;
+  }
+  .side-nav a {
+    display: block; padding: 6px 12px; margin-bottom: 1px;
+    font-size: .875rem; color: var(--ink-soft); text-decoration: none;
+    border-radius: 8px; border-left: 2px solid transparent; line-height: 1.4;
+  }
+  .side-nav a:hover { background: var(--dim); color: var(--ink); }
+  .side-nav a.active {
+    background: var(--coral-wash); color: var(--coral-deep);
+    font-weight: 600; border-left-color: var(--coral);
+  }
+  .nav-empty { font-size: .82rem; color: var(--ink-faint); padding: 8px 12px; display: none; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    background: linear-gradient(135deg, #1d2833 0%, #2f2a35 55%, #3a2b2b 100%);
+    border-radius: 20px; color: #fff; padding: 52px 36px 46px;
+    text-align: center; margin-bottom: 36px; position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle at 20% 15%, rgba(63,169,212,.18), transparent 55%),
+                radial-gradient(circle at 85% 80%, rgba(239,107,88,.16), transparent 55%);
+    pointer-events: none;
+  }
+  .hero > * { position: relative; }
+  .hero img.logo { width: 108px; margin: 0 auto 20px; }
+  .hero h1 { font-family: 'Caveat', cursive; font-size: 3.3rem; line-height: 1.05; margin: 0 0 10px; font-weight: 700; }
+  .hero .eyebrow {
+    font-family: 'Special Elite', monospace; font-size: .78rem;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--coral); margin: 0;
+  }
+  .hero .parent-org {
+    margin: 26px 0 0; padding-top: 22px; font-size: .84rem;
+    border-top: 1px solid rgba(255,255,255,.14); color: rgba(255,255,255,.72);
+  }
+  .hero .parent-org a { color: #fff; }
+  .hero .parent-org img { width: 118px; margin: 12px auto 0; border-radius: 6px; }
+
+  /* ---------- welcome ---------- */
+  .welcome-card {
+    background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--coral);
+    border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px;
+    font-size: 1.06rem; box-shadow: var(--shadow);
+  }
+  .welcome-card p { margin: 0; }
+
+  /* ---------- sections ---------- */
+  .section {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 30px 32px; margin-bottom: 24px; scroll-margin-top: calc(var(--topbar-h) + 20px);
+    box-shadow: var(--shadow);
+  }
+  .section > :last-child { margin-bottom: 0; }
+  .sec-eyebrow {
+    font-family: 'Special Elite', monospace; font-size: .66rem;
+    text-transform: uppercase; letter-spacing: .15em; color: var(--sky-deep);
     margin: 0 0 6px;
-    font-weight: 600;
   }
-  header.hero p {
-    font-family: 'Special Elite', monospace;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--coral);
-    font-size: 0.95rem;
-    margin: 0;
+  .section h2 {
+    font-family: 'Special Elite', monospace; font-size: 1.42rem;
+    margin: 0 0 20px; letter-spacing: .01em; line-height: 1.25;
+    padding-bottom: 14px; border-bottom: 1px solid var(--line);
   }
-  main {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 40px 24px 100px;
+  .section h3 {
+    font-family: 'Special Elite', monospace; font-size: .92rem;
+    text-transform: uppercase; letter-spacing: .07em; color: var(--coral-deep);
+    margin: 26px 0 8px;
   }
-  .welcome {
-    font-size: 1.15rem;
-    border-left: 4px solid var(--coral);
-    padding-left: 18px;
-    margin-bottom: 40px;
-    font-style: italic;
+  .section p { margin: 0 0 14px; }
+  .section ul, .section ol { margin: 0 0 16px; padding-left: 20px; }
+  .section li { margin-bottom: 7px; }
+  .section li::marker { color: var(--sky); }
+
+  /* ---------- callouts ---------- */
+  .callout {
+    border-radius: 12px; padding: 16px 20px; margin: 0 0 18px;
+    font-size: .95rem; border: 1px solid;
   }
-  nav.toc {
-    background: var(--paper-dim);
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-bottom: 48px;
+  .callout p:last-child { margin-bottom: 0; }
+  .callout-label {
+    font-family: 'Special Elite', monospace; font-size: .68rem;
+    text-transform: uppercase; letter-spacing: .12em; display: block; margin-bottom: 5px;
   }
-  nav.toc h2 {
-    font-family: 'Special Elite', monospace;
-    font-size: 1rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--sky);
-    margin-top: 0;
+  .callout.important { background: var(--coral-wash); border-color: #f6cfc7; }
+  .callout.important .callout-label { color: var(--coral-deep); }
+  .callout.tip { background: var(--sky-wash); border-color: #c9e6f4; }
+  .callout.tip .callout-label { color: var(--sky-deep); }
+
+  /* key/value facts */
+  .fact-grid { display: grid; gap: 10px; margin: 0 0 18px; }
+  .fact {
+    display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline;
+    background: var(--dim); border-radius: 10px; padding: 12px 16px;
   }
-  nav.toc ul {
-    columns: 2;
-    padding-left: 18px;
-    margin: 0;
+  .fact dt {
+    font-family: 'Special Elite', monospace; font-size: .68rem; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-faint); margin: 0; flex: none;
   }
-  nav.toc a {
-    color: var(--ink);
-    text-decoration: none;
-    font-size: 0.92rem;
-  }
-  nav.toc a:hover { color: var(--coral); }
-  section {
-    margin-bottom: 44px;
-    scroll-margin-top: 20px;
-  }
-  section h2 {
-    font-family: 'Special Elite', monospace;
-    color: var(--ink);
-    border-bottom: 2px solid var(--sky);
-    padding-bottom: 8px;
-    font-size: 1.3rem;
-    letter-spacing: 0.02em;
-  }
-  section h3 {
-    font-family: 'Special Elite', monospace;
-    color: var(--coral);
-    font-size: 1rem;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-  }
+  .fact dd { margin: 0; font-weight: 600; font-size: .98rem; }
+  .fact dd.mono { font-family: 'Special Elite', monospace; letter-spacing: .04em; }
+
+  /* ---------- buttons ---------- */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 18px; }
+  .btn-row:last-child { margin-bottom: 0; }
   a.link-btn {
-    display: inline-block;
-    margin: 6px 8px 6px 0;
-    padding: 6px 16px;
-    border: 2px solid var(--sky);
-    border-radius: 999px;
-    color: var(--sky);
-    text-decoration: none;
-    font-family: 'Special Elite', monospace;
-    font-size: 0.85rem;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 17px; border-radius: 999px;
+    border: 1.5px solid var(--sky); color: var(--sky-deep);
+    text-decoration: none; font-size: .83rem; font-weight: 600; white-space: nowrap;
   }
-  a.link-btn:hover { background: var(--sky); color: #fff; }
-  a { color: var(--sky); }
-  ul, ol { padding-left: 22px; }
-  .example {
-    background: var(--paper-dim);
-    border-radius: 8px;
-    padding: 14px 18px;
-    font-style: italic;
+  a.link-btn:hover { background: var(--sky); color: #fff; border-color: var(--sky); }
+  a.link-btn.primary { background: var(--coral); border-color: var(--coral); color: #fff; }
+  a.link-btn.primary:hover { background: var(--coral-deep); border-color: var(--coral-deep); }
+  a.link-btn::after { content: "↗"; font-size: .78em; opacity: .65; }
+  a.link-btn.no-ext::after { content: none; }
+
+  /* ---------- figures ---------- */
+  figure { margin: 0 0 18px; }
+  figure img { border-radius: 10px; border: 1px solid var(--line); width: 100%; }
+  figure figcaption { font-size: .78rem; color: var(--ink-faint); margin-top: 7px; text-align: center; }
+  .fig-logo img { border: 0; width: auto; max-width: 210px; max-height: 66px; object-fit: contain; }
+  .fig-narrow { max-width: 330px; }
+  .fig-narrow.center { margin-left: auto; margin-right: auto; }
+  .fig-doc img { max-width: 520px; margin: 0 auto; }
+
+  .media-row { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 16px; }
+  .media-row img { width: 92px; flex: none; border-radius: 10px; border: 1px solid var(--line); }
+  .media-row p { margin: 0; }
+
+  .example-quote {
+    background: var(--dim); border-radius: 10px; padding: 14px 18px;
+    font-style: italic; color: var(--ink-soft); margin: 0 0 16px;
   }
-  .contact-block {
-    background: var(--ink);
-    color: #fff;
-    border-radius: 12px;
-    padding: 28px;
-    text-align: center;
+
+  /* ---------- interactive checklist ---------- */
+  .checklist-card {
+    background: linear-gradient(135deg, #1d2833, #34272f);
+    border-radius: var(--radius); padding: 28px 30px; margin-bottom: 24px; color: #fff;
+    scroll-margin-top: calc(var(--topbar-h) + 20px);
   }
-  .contact-block a { color: var(--coral); }
+  .checklist-card h2 {
+    font-family: 'Special Elite', monospace; font-size: 1.3rem;
+    margin: 0 0 4px; color: #fff; border: 0; padding: 0;
+  }
+  .checklist-sub { font-size: .85rem; color: rgba(255,255,255,.62); margin: 0 0 20px; }
+  .check-progress {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+  }
+  .check-bar { flex: 1; height: 7px; border-radius: 999px; background: rgba(255,255,255,.14); overflow: hidden; }
+  .check-bar span { display: block; height: 100%; width: 0%; background: var(--coral); border-radius: 999px; transition: width .25s ease; }
+  .check-count {
+    font-family: 'Special Elite', monospace; font-size: .78rem;
+    color: rgba(255,255,255,.8); white-space: nowrap;
+  }
+  .check-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(238px, 1fr)); gap: 3px; }
+  .check-item {
+    display: flex; align-items: center; gap: 11px; cursor: pointer;
+    padding: 9px 12px; border-radius: 9px; font-size: .9rem; color: rgba(255,255,255,.9);
+    user-select: none;
+  }
+  .check-item:hover { background: rgba(255,255,255,.06); }
+  .check-item input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .check-box {
+    width: 19px; height: 19px; border-radius: 5px; flex: none;
+    border: 1.5px solid rgba(255,255,255,.38); display: grid; place-items: center;
+    font-size: .72rem; color: transparent;
+  }
+  .check-item input:checked ~ .check-box { background: var(--coral); border-color: var(--coral); color: #fff; }
+  .check-item input:checked ~ .check-label { text-decoration: line-through; color: rgba(255,255,255,.45); }
+  .check-item input:focus-visible ~ .check-box { outline: 2px solid var(--sky); outline-offset: 2px; }
+  .check-reset {
+    background: none; border: 0; color: rgba(255,255,255,.5); font-family: inherit;
+    font-size: .76rem; cursor: pointer; padding: 0; margin-top: 16px; text-decoration: underline;
+  }
+  .check-reset:hover { color: #fff; }
+
+  /* ---------- contact ---------- */
+  .contact-card {
+    background: linear-gradient(135deg, #1d2833, #3a2b2b); color: #fff;
+    border-radius: var(--radius); padding: 36px 32px; text-align: center;
+    scroll-margin-top: calc(var(--topbar-h) + 20px);
+  }
+  .contact-card h2 {
+    font-family: 'Caveat', cursive; font-size: 2.4rem; margin: 0 0 4px;
+    color: #fff; border: 0; padding: 0;
+  }
+  .contact-card .role {
+    font-family: 'Special Elite', monospace; font-size: .7rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--coral); margin: 0 0 24px;
+  }
+  .contact-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .contact-links a {
+    display: flex; flex-direction: column; gap: 2px; min-width: 160px;
+    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.13);
+    border-radius: 12px; padding: 13px 20px; text-decoration: none; color: #fff;
+  }
+  .contact-links a:hover { background: rgba(255,255,255,.13); border-color: var(--coral); }
+  .contact-links .cl-label {
+    font-family: 'Special Elite', monospace; font-size: .62rem;
+    letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.55);
+  }
+  .contact-links .cl-value { font-size: .95rem; font-weight: 600; }
+
+  /* ---------- to top ---------- */
+  .to-top {
+    position: fixed; right: 22px; bottom: 22px; width: 44px; height: 44px;
+    border-radius: 50%; border: 1px solid var(--line); background: var(--card);
+    color: var(--ink); font-size: 1.1rem; cursor: pointer; z-index: 40;
+    box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .to-top.show { opacity: 1; pointer-events: auto; }
+  .to-top:hover { border-color: var(--coral); color: var(--coral-deep); }
+
+  .scrim {
+    position: fixed; inset: 0; background: rgba(20,22,26,.45); z-index: 45;
+    opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .scrim.show { opacity: 1; pointer-events: auto; }
+
   footer {
-    text-align: center;
-    padding: 30px;
-    font-size: 0.8rem;
-    color: #999;
+    text-align: center; padding: 34px 20px 46px;
+    font-size: .78rem; color: var(--ink-faint);
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; gap: 0; padding: calc(var(--topbar-h) + 20px) 16px 90px; }
+    .nav-toggle { display: inline-flex; }
+    .topbar-contact { display: none; }
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0; width: 290px; max-height: none;
+      background: var(--card); border-right: 1px solid var(--line);
+      padding: 20px 18px; z-index: 55; overflow-y: auto;
+      transform: translateX(-100%); transition: transform .25s ease;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .hero { padding: 40px 22px 34px; border-radius: 16px; }
+    .hero h1 { font-size: 2.4rem; }
+    .hero img.logo { width: 88px; }
+    .section { padding: 24px 20px; }
+    .section h2 { font-size: 1.24rem; }
+    .welcome-card { padding: 20px 22px; font-size: 1rem; }
+    .checklist-card, .contact-card { padding: 24px 20px; }
+    .media-row { gap: 14px; }
+    .media-row img { width: 72px; }
+    .check-items { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    .topbar, .sidebar, .to-top, .progress-track, .scrim, .check-reset { display: none !important; }
+    .layout { display: block; padding: 0; max-width: none; }
+    .section, .welcome-card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+    .hero, .checklist-card, .contact-card { background: #222 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    a.link-btn::after { content: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
   }
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <img src="BOHEMIAJR.png" alt="Bohemia Jr. logo">
-  <h1>Bohemia Jr. Client Guide</h1>
-  <p>The Goonies Bible</p>
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="topbar">
+  <a class="brand" href="#top">
+    <img src="BOHEMIAJR.png" alt="">
+    <span>Bohemia Jr. Client Guide</span>
+  </a>
+  <div class="topbar-spacer"></div>
+  <a class="topbar-contact" href="#contact">Contact Corey</a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="sidebar">☰ Contents</button>
 </header>
 
-<main>
-  <p class="welcome">Welcome to Bohemia Jr.! It is our pleasure to have you join the Bohemia family and we are certain there is success in your future. Please use this guide to answer many questions you may have and go over expectations we have for our clients and parents.</p>
+<div class="scrim" id="scrim"></div>
 
-  <p style="text-align:center;margin-bottom:40px;">
-    Bohemia Jr. is the youth division of <a href="https://bohemiaent.com" target="_blank" rel="noopener">Bohemia Group</a>.<br>
-    <img src="bohemialogo.jpg" alt="Bohemia Group logo" style="max-width:160px;margin-top:14px;">
-  </p>
+<div class="layout" id="top">
 
-  <img src="checklist.jpeg" alt="New Client Checklist" style="max-width:100%;border-radius:12px;display:block;margin:0 auto 40px;">
+  <aside class="sidebar" id="sidebar">
+    <div class="search-wrap">
+      <input type="search" id="navSearch" placeholder="Search the guide…" aria-label="Search the guide">
+    </div>
+    <nav class="side-nav" id="sideNav" aria-label="Guide contents">
+      <div class="nav-group">
+        <p class="nav-group-title">Start Here</p>
+        <a href="#checklist">New Client Checklist</a>
+        <a href="#google-drive">Google Drive</a>
+        <a href="#work-permits">Work Permits / Coogan</a>
+        <a href="#casting-profiles">Casting Profiles</a>
+      </div>
+      <div class="nav-group">
+        <p class="nav-group-title">Your Materials</p>
+        <a href="#headshots">Headshots</a>
+        <a href="#resumes">Resumes</a>
+        <a href="#slate-shots">Slate Shots</a>
+        <a href="#video-clips">Video Clips</a>
+        <a href="#demo-clips">Demo Clips</a>
+      </div>
+      <div class="nav-group">
+        <p class="nav-group-title">Auditions &amp; Work</p>
+        <a href="#auditions">Auditions</a>
+        <a href="#self-tape">Self Tape Auditions</a>
+        <a href="#out-of-state">Out of State Clients</a>
+      </div>
+      <div class="nav-group">
+        <p class="nav-group-title">Growing Your Career</p>
+        <a href="#training">Training</a>
+        <a href="#coaching">Coaching</a>
+        <a href="#agents">Agents</a>
+        <a href="#networking">Networking</a>
+        <a href="#cpp">CPP (formerly CHSPE)</a>
+        <a href="#social-media">Social Media</a>
+      </div>
+      <div class="nav-group">
+        <p class="nav-group-title">Working With Corey</p>
+        <a href="#communication">Communication</a>
+        <a href="#commissions">Commissions</a>
+        <a href="#meet">Meet With Corey</a>
+        <a href="#pet-peeves">Pet Peeves &amp; What I Love</a>
+        <a href="#services-memo">Services Memo</a>
+      </div>
+      <div class="nav-group">
+        <p class="nav-group-title">Resources</p>
+        <a href="#vendor-directory">Vendor Directory</a>
+        <a href="#facebook-group">Facebook Group</a>
+        <a href="#coaching-education">Coaching &amp; Education</a>
+        <a href="#blog">The Blog</a>
+      </div>
+      <div class="nav-group">
+        <p class="nav-group-title">Contact</p>
+        <a href="#contact">Corey Ralston</a>
+      </div>
+      <p class="nav-empty" id="navEmpty">No sections match that search.</p>
+    </nav>
+  </aside>
 
-  <nav class="toc">
-    <h2>Contents</h2>
-    <ul>
-      <li><a href="#google-drive">Google Drive</a></li>
-      <li><a href="#auditions">Auditions</a></li>
-      <li><a href="#self-tape">Self Tape Auditions</a></li>
-      <li><a href="#work-permits">Work Permits / Coogan Accounts</a></li>
-      <li><a href="#casting-profiles">Casting Profiles</a></li>
-      <li><a href="#slate-shots">Slate Shots</a></li>
-      <li><a href="#video-clips">Video Clips</a></li>
-      <li><a href="#demo-clips">Demo Clips</a></li>
-      <li><a href="#resumes">Resumes</a></li>
-      <li><a href="#social-media">Social Media</a></li>
-      <li><a href="#training">Training</a></li>
-      <li><a href="#coaching">Coaching</a></li>
-      <li><a href="#headshots">Headshots</a></li>
-      <li><a href="#communication">Communication</a></li>
-      <li><a href="#out-of-state">Out of State Clients</a></li>
-      <li><a href="#commissions">Commissions</a></li>
-      <li><a href="#networking">Networking</a></li>
-      <li><a href="#meet">Meet With Corey</a></li>
-      <li><a href="#cpp">CPP (formerly CHSPE)</a></li>
-      <li><a href="#agents">Agents</a></li>
-      <li><a href="#facebook-group">Facebook Group</a></li>
-      <li><a href="#services-memo">Services Memo</a></li>
-      <li><a href="#vendor-directory">Vendor Directory</a></li>
-      <li><a href="#coaching-education">Coaching &amp; Education</a></li>
-      <li><a href="#blog">The Blog</a></li>
-      <li><a href="#pet-peeves">Pet Peeves &amp; What I Love</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+  <main>
 
-  <section id="google-drive">
-    <h2>Google Drive</h2>
-    <p>Every client should have already received an invitation to a Google Drive folder via email. This folder will be the main source of storage for files and things to be reviewed.</p>
-    <a class="link-btn" href="https://drive.google.com/drive/folders/116CnaPTljYT9l9IWk_FonRuIjSh-pWtM?usp=sharing" target="_blank" rel="noopener">Drive Folder</a>
+    <div class="hero">
+      <img class="logo" src="BOHEMIAJR.png" alt="Bohemia Jr.">
+      <h1>Bohemia Jr. Client Guide</h1>
+      <p class="eyebrow">The Goonies Bible</p>
+      <p class="parent-org">
+        Bohemia Jr. is the youth division of <a href="https://bohemiaent.com" target="_blank" rel="noopener">Bohemia Group</a>.
+        <img src="bohemialogo.jpg" alt="Bohemia Group">
+      </p>
+    </div>
 
-    <h3>Headshots</h3>
-    <p>Store every headshot session — full proofs. I will make sub folders to organize each shoot into types, selects, and "to upload."</p>
+    <div class="welcome-card">
+      <p>Welcome to Bohemia Jr.! It is our pleasure to have you join the Bohemia family and we are certain there is success in your future. Please use this guide to answer many questions you may have and go over expectations we have for our clients and parents.</p>
+    </div>
 
-    <h3>Important Docs</h3>
-    <p>Upload work permits, Coogan paperwork, passports, vaccine records, union memberships, contracts, etc.</p>
+    <!-- ===== interactive checklist ===== -->
+    <div class="checklist-card" id="checklist">
+      <h2>New Client Checklist</h2>
+      <p class="checklist-sub">Tick these off as you go — your progress is saved on this device.</p>
+      <div class="check-progress">
+        <div class="check-bar"><span id="checkBar"></span></div>
+        <span class="check-count" id="checkCount">0 of 13</span>
+      </div>
+      <div class="check-items" id="checkItems">
+        <label class="check-item"><input type="checkbox" data-key="aa"><span class="check-box">✓</span><span class="check-label">Actors Access added</span></label>
+        <label class="check-item"><input type="checkbox" data-key="lac"><span class="check-box">✓</span><span class="check-label">LA Casting added</span></label>
+        <label class="check-item"><input type="checkbox" data-key="permit"><span class="check-box">✓</span><span class="check-label">CA Work Permit</span></label>
+        <label class="check-item"><input type="checkbox" data-key="coogan"><span class="check-box">✓</span><span class="check-label">Coogan Account</span></label>
+        <label class="check-item"><input type="checkbox" data-key="headshots"><span class="check-box">✓</span><span class="check-label">Headshots</span></label>
+        <label class="check-item"><input type="checkbox" data-key="passport"><span class="check-box">✓</span><span class="check-label">Passport</span></label>
+        <label class="check-item"><input type="checkbox" data-key="resume"><span class="check-box">✓</span><span class="check-label">Resume PDF &amp; editable</span></label>
+        <label class="check-item"><input type="checkbox" data-key="contract"><span class="check-box">✓</span><span class="check-label">Bohemia contract signed</span></label>
+        <label class="check-item"><input type="checkbox" data-key="infosheet"><span class="check-box">✓</span><span class="check-label">Bohemia InfoSheet filled out</span></label>
+        <label class="check-item"><input type="checkbox" data-key="reel"><span class="check-box">✓</span><span class="check-label">Demo reel</span></label>
+        <label class="check-item"><input type="checkbox" data-key="clips"><span class="check-box">✓</span><span class="check-label">Demo clips</span></label>
+        <label class="check-item"><input type="checkbox" data-key="singing"><span class="check-box">✓</span><span class="check-label">Singing clip (optional)</span></label>
+        <label class="check-item"><input type="checkbox" data-key="intro"><span class="check-box">✓</span><span class="check-label">Intro email to agencies</span></label>
+      </div>
+      <button class="check-reset" id="checkReset">Reset checklist</button>
+    </div>
 
-    <h3>Reels / Clips</h3>
-    <ul>
-      <li><strong>Booked Work Footage</strong> — airchecks from aired, streaming or televised programming, edited clips for reel, digital prints of films/appearances.</li>
-      <li><strong>Demo Scenes</strong> — client-created custom scenes for reel, shot/edited like booked work.</li>
-      <li><strong>Self Tapes for Profiles</strong> — custom scenes, project-released/non-NDA auditions that are coached and great examples of skill, genre, character.</li>
-      <li><strong>VO Reel</strong> — voice over mp3 audio files of edited reel, clips, demo examples, booked work, character, commercial, narration, video game, animation, etc.</li>
-      <li>
-        <strong>About Me</strong> — a 60-second charismatic getting-to-know-you video.
-        <div>
+    <!-- ===== START HERE ===== -->
+    <section class="section" id="google-drive">
+      <p class="sec-eyebrow">Start Here</p>
+      <h2>Google Drive</h2>
+      <p>Every client should have already received an invitation to a Google Drive folder via email. This folder will be the main source of storage for files and things to be reviewed.</p>
+      <div class="btn-row">
+        <a class="link-btn primary" href="https://drive.google.com/drive/folders/116CnaPTljYT9l9IWk_FonRuIjSh-pWtM?usp=sharing" target="_blank" rel="noopener">Open Drive Folder</a>
+      </div>
+
+      <h3>Headshots</h3>
+      <p>Store every headshot session — full proofs. I will make sub folders to organize each shoot into types, selects, and "to upload."</p>
+
+      <h3>Important Docs</h3>
+      <p>Upload work permits, Coogan paperwork, passports, vaccine records, union memberships, contracts, etc.</p>
+
+      <h3>Reels / Clips</h3>
+      <ul>
+        <li><strong>Booked Work Footage</strong> — airchecks from aired, streaming or televised programming, edited clips for reel, digital prints of films/appearances.</li>
+        <li><strong>Demo Scenes</strong> — client-created custom scenes for reel, shot/edited like booked work.</li>
+        <li><strong>Self Tapes for Profiles</strong> — custom scenes, project-released/non-NDA auditions that are coached and great examples of skill, genre, character.</li>
+        <li><strong>VO Reel</strong> — voice over mp3 audio files of edited reel, clips, demo examples, booked work, character, commercial, narration, video game, animation, etc.</li>
+        <li><strong>About Me</strong> — a 60-second charismatic getting-to-know-you video.</li>
+        <li><strong>Slate Shots</strong> — seven-second video for Actors Access to catch attention. See <a href="https://drive.google.com/file/d/1axXtx6QypPRM5pCpSRDsJyLmuf0Qt7xv/view?usp=sharing" target="_blank" rel="noopener">Slate Shot Ideas</a>.</li>
+        <li><strong>Vocal / Singing Clips</strong> — 16/32 bars of accompanied or backing-track vocals of musical theater/pop songs that showcase range and style, filmed like a self tape.</li>
+        <li><strong>Dance Clips</strong> — 30–60 seconds of dance style or modern pop dance skill to music.</li>
+        <li><strong>Special Skill Clips</strong> — (for Casting Networks) 30-second clips of athletic or trained disciplines.</li>
+        <li><strong>Character Type Clips</strong> — 30-second demo or self tape clips of types (underdog, bully, airhead, etc).</li>
+        <li><strong>Reels</strong> — edited compilations of booked work or a combo of clips, self tapes, demo scenes, booked work, etc. No longer than 2.5 minutes, or genre-based 60-second reels.</li>
+      </ul>
+      <div class="callout tip">
+        <span class="callout-label">About Me examples</span>
+        <div class="btn-row">
           <a class="link-btn" href="https://player.mediadelivery.net/play/712901/72978d7f-5756-48f0-b1aa-1ef7691f8282" target="_blank" rel="noopener">Example 1</a>
           <a class="link-btn" href="https://player.mediadelivery.net/play/712901/4dd4ade1-f738-44c6-86c8-f4a9dcba1a67" target="_blank" rel="noopener">Example 2</a>
           <a class="link-btn" href="https://player.mediadelivery.net/play/712901/2418a067-812e-4ed3-a298-08c5f4097c34" target="_blank" rel="noopener">Example 3</a>
           <a class="link-btn" href="https://player.mediadelivery.net/play/712901/f8d1c6a3-0c33-4c5d-aa9f-a7004fdf32fd" target="_blank" rel="noopener">Example 4</a>
         </div>
-      </li>
-      <li><strong>Slate Shots</strong> — seven-second video for Actors Access to catch attention. See <a href="https://drive.google.com/file/d/1axXtx6QypPRM5pCpSRDsJyLmuf0Qt7xv/view?usp=sharing" target="_blank" rel="noopener">Slate Shot Ideas</a>.</li>
-      <li><strong>Vocal / Singing Clips</strong> — 16/32 bars of accompanied or backing-track vocals of musical theater/pop songs that showcase range and style, filmed like a self tape.</li>
-      <li><strong>Dance Clips</strong> — 30–60 seconds of dance style or modern pop dance skill to music.</li>
-      <li><strong>Special Skill Clips</strong> — (for Casting Networks) 30-second clips of athletic or trained disciplines.</li>
-      <li><strong>Character Type Clips</strong> — 30-second demo or self tape clips of types (underdog, bully, airhead, etc).</li>
-      <li><strong>Reels</strong> — edited compilations of booked work or a combo of clips, self tapes, demo scenes, booked work, etc. No longer than 2.5 minutes, or genre-based 60-second reels.</li>
-    </ul>
+      </div>
 
-    <h3>Self Tapes</h3>
-    <p>Self tapes for review, if not using WeTransfer, or self tapes you want to save.</p>
+      <h3>Self Tapes</h3>
+      <p>Self tapes for review, if not using WeTransfer, or self tapes you want to save.</p>
 
-    <h3>Resumes</h3>
-    <p>PDFs or docs of your current resume. Use <a href="https://resumes.childactor101.com" target="_blank" rel="noopener">resumes.childactor101.com</a> for the industry standard template.</p>
+      <h3>Resumes</h3>
+      <p>PDFs or docs of your current resume. Use <a href="https://resumes.childactor101.com" target="_blank" rel="noopener">resumes.childactor101.com</a> for the industry standard template.</p>
 
-    <h3>Audition Tracker <em>(optional)</em></h3>
-    <p>Submission sheets from talent reps, spreadsheets of auditions and outcomes. Use <a href="https://pages.childactor101.com" target="_blank" rel="noopener">pages.childactor101.com</a>.</p>
+      <h3>Audition Tracker <em>(optional)</em></h3>
+      <p>Submission sheets from talent reps, spreadsheets of auditions and outcomes. Use <a href="https://pages.childactor101.com" target="_blank" rel="noopener">pages.childactor101.com</a>.</p>
 
-    <p>Please keep this folder organized with appropriately labeled sub folders that explain the contents. For example, a sub folder may be labeled HEADSHOTS and may include another sub folder labeled "June 2027."</p>
-  </section>
+      <div class="callout important">
+        <span class="callout-label">Keep it organized</span>
+        <p>Please keep this folder organized with appropriately labeled sub folders that explain the contents. For example, a sub folder may be labeled HEADSHOTS and may include another sub folder labeled "June 2027."</p>
+      </div>
+    </section>
 
-  <section id="auditions">
-    <h2>Auditions</h2>
-    <p>Most auditions will be sent to you by email — via the agency (with mgr/Bohemia cc'd), or from Bohemia with the agency cc'd. 99% of them will be self taped auditions.</p>
-    <p>Please adhere to the deadline. It's better to get it in early, with enough time for me to review it and offer corrections if needed.</p>
-    <p>Do not hesitate to ask for more time if you truly need it to give your best work. A lot of times we can request that from casting, and more often than not they oblige. It should go without saying to not make a habit out of extension requests — learn to manage your time.</p>
-    <p>Usually you will get a reply to your audition info email from me with a comprehensive Audition Prep Guide for the specific role and project. This is an excellent preparation tool but not a true replacement for coaching.</p>
+    <section class="section" id="work-permits">
+      <p class="sec-eyebrow">Start Here</p>
+      <h2>Work Permits / Coogan Accounts</h2>
+      <ul>
+        <li>Obtain or supply us with Coogan Account information ASAP.</li>
+        <li>Make sure current work permits are on file at all times. You should have, at minimum, California &amp; your home state.</li>
+      </ul>
+      <div class="callout important">
+        <span class="callout-label">Don't get caught out</span>
+        <p>Set a calendar reminder one month before expiration of the permit!!!</p>
+      </div>
+      <div class="btn-row">
+        <a class="link-btn" href="https://www.sagaftra.org/membership-benefits/young-performers/coogan-law" target="_blank" rel="noopener">Coogan Law &amp; Account Info</a>
+        <a class="link-btn" href="https://www.dir.ca.gov/dlse/entertainment-work-permit.htm" target="_blank" rel="noopener">California Work Permit</a>
+      </div>
+    </section>
 
-    <h3>Guide Examples</h3>
-    <ul>
-      <li><a href="https://claude.ai/artifact/77fuDUm2LBsGRFUed47PYS" target="_blank" rel="noopener">Co-Star // Drama Episodic Series</a></li>
-      <li><a href="https://claude.ai/artifact/MVQj3MagWNACALBA9xFrQ2" target="_blank" rel="noopener">Guest Star // Single-Camera Comedy Series</a></li>
-      <li><a href="https://claude.ai/artifact/CFV4yg7kyT9SdMsamgVf5o" target="_blank" rel="noopener">Recurring Role // Drama Streaming Series</a></li>
-      <li><a href="https://claude.ai/artifact/GcHDB3h8VxRu3LoZuUBvEz" target="_blank" rel="noopener">Lead // Family Feature Film</a></li>
-    </ul>
+    <section class="section" id="casting-profiles">
+      <p class="sec-eyebrow">Start Here</p>
+      <h2>Casting Profiles</h2>
+      <p>Every client must have an active profile on <a href="https://www.actorsaccess.com/" target="_blank" rel="noopener">Actors Access</a> and <a href="https://www.lacasting.com/" target="_blank" rel="noopener">Casting Networks</a>. If you have not done so, please add us as representatives on those profiles.</p>
 
-    <p>You can also access:</p>
+      <dl class="fact-grid">
+        <div class="fact">
+          <dt>LA Casting — Management</dt>
+          <dd>Bohemia Group</dd>
+        </div>
+        <div class="fact">
+          <dt>LA Casting — Agency Code</dt>
+          <dd class="mono">78a37a4</dd>
+        </div>
+        <div class="fact">
+          <dt>Actors Access — Management</dt>
+          <dd>Bohemia Group — Susan Ferris, Los Angeles, CA</dd>
+        </div>
+      </dl>
 
-    <h3>Prep101</h3>
-    <img src="prep101-logo.png" alt="Prep101" style="max-width:220px;display:block;margin-bottom:10px;">
-    <p>Prep101 is my proprietary audition prep guide tool that I usually send you automatically, free to use. Email me for a free use code.</p>
-    <a class="link-btn" href="https://prep101.childactor101.com" target="_blank" rel="noopener">Prep101</a>
+      <p>Actors Access is connected to Breakdown Services and that is our primary source of casting notices for FILM, TV, STAGE and some COMMERCIAL casting notices. You have two free headshots that you may upload. It is vital that you upload an approved THEATRICAL and COMMERCIAL headshot there. We will want you to add additional headshots after you have taken them or we have discussed options. It is likely that you will be asked to upload a minimum of 3 and up to 5 additional photos to help us submit the best looks to casting for specific roles.</p>
+      <ul>
+        <li>Fill out required info on your casting profile.</li>
+        <li>Make sure to always update your skills, sizes and resume.</li>
+        <li>Check in at least four times a year to see if info is accurate.</li>
+        <li>You may update your resume as soon as you shoot a project, but not before.</li>
+        <li>Please feel free to submit yourself, or ask me to submit you, for any commercial, non-union, print or student film projects. There will come a time when I may decide that we are not needing these types of jobs anymore, or I may ask you to pause or stop self submissions for various reasons.</li>
+      </ul>
+    </section>
 
-    <h3>Reader101</h3>
-    <img src="reader101-logo.png" alt="Reader101" style="max-width:220px;display:block;margin:16px 0 10px;">
-    <p>Reader101 is a tool to guide the reader on the best way to approach the sides and support the actor, free to use. Email me for a free use code.</p>
-    <a class="link-btn" href="https://reader101.childactor101.com" target="_blank" rel="noopener">Reader101</a>
-    <a class="link-btn" href="ben_reader_support_guide.html" target="_blank" rel="noopener">Example Reader101 Guide</a>
-  </section>
+    <!-- ===== YOUR MATERIALS ===== -->
+    <section class="section" id="headshots">
+      <p class="sec-eyebrow">Your Materials</p>
+      <h2>Headshots</h2>
+      <p>Headshots are the most important marketing tool you have and should be given a lot of care and attention. Kids under 15 should get updated photos twice a year at least. Every actor should update looks once a year, or when you significantly change your appearance, or when you need to reevaluate your tools if facing a slump in activity.</p>
+      <p>I am extremely opinionated about headshots. I am a former photographer with years of experience in this field and I know what photos work. I am an advocate of spending as much as you can afford on this essential tool. Headshots are the key to getting you opportunities. Be competitive and have amazing photos.</p>
+      <p>Here is a recommendation list of photographers at various price points that will deliver the type of photo that fits your needs and style.</p>
+      <div class="btn-row">
+        <a class="link-btn primary" href="https://childactor101.notion.site/Headshot-Photographers-19fa1d86e651804f856bf532495d6505" target="_blank" rel="noopener">Corey's Photographer Picks</a>
+        <a class="link-btn" href="https://go.childactor101.com/hEAd" target="_blank" rel="noopener">Headshot Guide</a>
+      </div>
+      <figure>
+        <img src="headshotguide.jpeg" alt="Headshot Guide — getting this wrong can be an expensive lesson">
+      </figure>
+    </section>
 
-  <section id="self-tape">
-    <h2>Self Tape Auditions</h2>
-    <p>An important part of my duties as your manager is to review your self tape auditions before they are sent to the agency or uploaded to Actors Access. If possible, I try to watch them before the deadline to give notes or changes if necessary.</p>
-    <p>You can share your self tape auditions with me by sending the files via <a href="https://www.wetransfer.com/" target="_blank" rel="noopener">WeTransfer</a>, or by creating a Google Drive sub folder.</p>
-    <p>I do not get access to view self tapes that are uploaded by the client to Actors Access. The agent can watch, approve, and submit — but I would have no access to that. Please make it a priority to send self tapes to me for review before the deadline. I know that's not always going to be reality, but we can make an effort.</p>
-    <img src="perfectselftapecourse.jpeg" alt="The Perfect Self Tape — a complete guided course for parents" style="max-width:100%;border-radius:8px;margin:10px 0;">
-    <a class="link-btn" href="https://express.adobe.com/page/4N3CH5BgyUPgp/" target="_blank" rel="noopener">Free Access</a>
-  </section>
+    <section class="section" id="resumes">
+      <p class="sec-eyebrow">Your Materials</p>
+      <h2>Resumes</h2>
+      <ul>
+        <li>Print at least 10 copies of your resume in case casting requests a hard copy.</li>
+        <li>Have a PDF resume on file.</li>
+      </ul>
+      <p>See the resume template for the industry standard format. Do not creatively stray too far from this resume style.</p>
+      <div class="btn-row">
+        <a class="link-btn primary" href="https://resumes.childactor101.com" target="_blank" rel="noopener">Fillable Resume Template</a>
+      </div>
+      <figure class="fig-doc">
+        <img src="billyresume1.jpg" alt="Example actor resume in industry standard format">
+        <figcaption>Industry standard format — follow this structure closely.</figcaption>
+      </figure>
+    </section>
 
-  <section id="work-permits">
-    <h2>Work Permits / Coogan Accounts</h2>
-    <ul>
-      <li>Obtain or supply us with Coogan Account information ASAP. See <a href="https://www.sagaftra.org/membership-benefits/young-performers/coogan-law" target="_blank" rel="noopener">Coogan Law &amp; Account Info</a>.</li>
-      <li>Make sure current work permits are on file at all times. You should have, at minimum, California &amp; your home state. See <a href="https://www.dir.ca.gov/dlse/entertainment-work-permit.htm" target="_blank" rel="noopener">California Entertainment Work Permit</a>.</li>
-      <li>Set a calendar reminder one month before expiration of the permit!!!</li>
-    </ul>
-  </section>
+    <section class="section" id="slate-shots">
+      <p class="sec-eyebrow">Your Materials</p>
+      <h2>Slate Shots</h2>
+      <figure class="fig-narrow center">
+        <img src="ssideashero.jpeg" alt="Slate Shot Ideas">
+      </figure>
+      <p>You must attach a slate shot to a few photos. Slate shots are 7-second video clips that match your headshot. It is optional to match wardrobe. It is a casual introduction by the talent and it is <strong>NOT</strong> the typical slate given before an audition. It should be genuine and show personality that reflects the tone of the individual photo.</p>
+      <p class="example-quote">Example: "Hi there! I'm Corey Ralston and I look forward to meeting you soon."</p>
+      <p>You are given one free slate shot and additional slate shots are $5 a piece. Once you record these please upload to Google Drive for approval before posting them.</p>
+      <div class="btn-row">
+        <a class="link-btn" href="https://drive.google.com/file/d/1axXtx6QypPRM5pCpSRDsJyLmuf0Qt7xv/view?usp=sharing" target="_blank" rel="noopener">Slate Shot Ideas</a>
+      </div>
+    </section>
 
-  <section id="casting-profiles">
-    <h2>Casting Profiles</h2>
-    <p>Every client must have an active profile on <a href="https://www.actorsaccess.com/" target="_blank" rel="noopener">Actors Access</a> and <a href="https://www.lacasting.com/" target="_blank" rel="noopener">Casting Networks</a>. If you have not done so, please add us as representatives on those profiles.</p>
-    <p>For LA Casting you will add under management: <strong>Bohemia Group</strong>. Our agency code is <strong>78a37a4</strong>.</p>
-    <p>For Actors Access you will add under management: <strong>Bohemia Group — Susan Ferris, Los Angeles, CA</strong>. Actors Access is connected to Breakdown Services and that is our primary source of casting notices for FILM, TV, STAGE and some COMMERCIAL casting notices. You have two free headshots that you may upload. It is vital that you upload an approved THEATRICAL and COMMERCIAL headshot there. We will want you to add additional headshots after you have taken them or we have discussed options. It is likely that you will be asked to upload a minimum of 3 and up to 5 additional photos to help us submit the best looks to casting for specific roles.</p>
-    <ul>
-      <li>Fill out required info on your casting profile.</li>
-      <li>Make sure to always update your skills, sizes and resume.</li>
-      <li>Check in at least four times a year to see if info is accurate.</li>
-      <li>You may update your resume as soon as you shoot a project, but not before.</li>
-      <li>Please feel free to submit yourself, or ask me to submit you, for any commercial, non-union, print or student film projects. There will come a time when I may decide that we are not needing these types of jobs anymore, or I may ask you to pause or stop self submissions for various reasons.</li>
-    </ul>
-  </section>
+    <section class="section" id="video-clips">
+      <p class="sec-eyebrow">Your Materials</p>
+      <h2>Video Clips</h2>
+      <div class="callout important">
+        <span class="callout-label">Do this now</span>
+        <p>It is essential to upload performance clips on Actors Access. Casting offices most likely do not know who you are yet and need to see an example of what you can do. Having performance clips we can submit with your photo will increase your odds of getting an audition in a huge way. Please upload at least one clip ASAP.</p>
+      </div>
+      <h3>Clip Examples</h3>
+      <ul>
+        <li>Reel of previous work</li>
+        <li>Self taped scene or monologue</li>
+        <li>Singing clip</li>
+        <li>Specialty skill (athletic, hobby)</li>
+        <li>About me video</li>
+        <li>Demo clips</li>
+      </ul>
+    </section>
 
-  <section id="slate-shots" style="overflow:auto;">
-    <h2>Slate Shots</h2>
-    <img src="ssideashero.jpeg" alt="Slate Shot Ideas" style="max-width:280px;border-radius:8px;float:right;margin:0 0 12px 16px;">
-    <p>You must attach a slate shot to a few photos. Slate shots are 7-second video clips that match your headshot. It is optional to match wardrobe. It is a casual introduction by the talent and it is <strong>NOT</strong> the typical slate given before an audition. It should be genuine and show personality that reflects the tone of the individual photo.</p>
-    <p class="example">Example: "Hi there! I'm Corey Ralston and I look forward to meeting you soon."</p>
-    <p>You are given one free slate shot and additional slate shots are $5 a piece. Once you record these please upload to Google Drive for approval before posting them.</p>
-    <a class="link-btn" href="https://drive.google.com/file/d/1axXtx6QypPRM5pCpSRDsJyLmuf0Qt7xv/view?usp=sharing" target="_blank" rel="noopener">Slate Shot Ideas</a>
-  </section>
+    <section class="section" id="demo-clips">
+      <p class="sec-eyebrow">Your Materials</p>
+      <h2>Demo Clips</h2>
+      <p>Self created content is king right now. It is very simple to film a demo scene to use as a clip. This should look as professional as you are capable of. It should be filmed with a scene partner and should be shot at a location that makes sense with good lighting and sound. It should be edited when appropriate with multiple camera angles. A good place to start is having a wide master shot of the entire clip and one angle on or over the shoulder of the scene partner showing a closeup of the speaking performer. These shots can be edited using simple software or apps on your smartphone.</p>
+      <ul>
+        <li>Clips should be no longer than 60 seconds in length.</li>
+        <li>They should be original or un-produced material.</li>
+      </ul>
+      <div class="callout important">
+        <span class="callout-label">Avoid</span>
+        <p>Do not use scripts from TV or film, especially if it's well known or iconic. You want the clip to be focused on you. Do not give an opportunity for a viewer to elicit a comparison of a previous actor's performance.</p>
+      </div>
+      <p>Take this course for free to get two scenes ready for your profiles. Email me if interested.</p>
+      <p>Ultimately we would love to have at least one performance clip that matches every headshot uploaded of types you can play. This is a proven valuable tool to assist casting and get far more auditions!</p>
+      <p>For LA Casting you will want to upload a reel or performance clips as well. Please include an upbeat or commercial example. You may film a mock or spec commercial on a product — have fun with it and make sure it showcases your talent in the best light.</p>
+      <p>Connect with me to brainstorm ideas and receive guidance on what works. It is fun and challenging and keeps your skills sharp. Once you have footage from projects you were hired to act in, we can discuss creating a reel and posting those clips as well.</p>
+      <div class="btn-row">
+        <a class="link-btn primary" href="https://express.adobe.com/page/srf8IpDO7ZkIU/" target="_blank" rel="noopener">Free Access</a>
+      </div>
+    </section>
 
-  <section id="video-clips">
-    <h2>Video Clips</h2>
-    <p>It is essential to upload performance clips on Actors Access. Casting offices most likely do not know who you are yet and need to see an example of what you can do. Having performance clips we can submit with your photo will increase your odds of getting an audition in a huge way. Please upload at least one clip ASAP.</p>
-    <h3>Clip Examples</h3>
-    <ul>
-      <li>Reel of previous work</li>
-      <li>Self taped scene or monologue</li>
-      <li>Singing clip</li>
-      <li>Specialty skill (athletic, hobby)</li>
-      <li>About me video</li>
-      <li>Demo clips</li>
-    </ul>
-  </section>
+    <!-- ===== AUDITIONS & WORK ===== -->
+    <section class="section" id="auditions">
+      <p class="sec-eyebrow">Auditions &amp; Work</p>
+      <h2>Auditions</h2>
+      <p>Most auditions will be sent to you by email — via the agency (with mgr/Bohemia cc'd), or from Bohemia with the agency cc'd. 99% of them will be self taped auditions.</p>
+      <div class="callout important">
+        <span class="callout-label">Deadlines</span>
+        <p>Please adhere to the deadline. It's better to get it in early, with enough time for me to review it and offer corrections if needed.</p>
+        <p>Do not hesitate to ask for more time if you truly need it to give your best work. A lot of times we can request that from casting, and more often than not they oblige. It should go without saying to not make a habit out of extension requests — learn to manage your time.</p>
+      </div>
+      <p>Usually you will get a reply to your audition info email from me with a comprehensive Audition Prep Guide for the specific role and project. This is an excellent preparation tool but not a true replacement for coaching.</p>
 
-  <section id="demo-clips">
-    <h2>Demo Clips</h2>
-    <p>Self created content is king right now. It is very simple to film a demo scene to use as a clip. This should look as professional as you are capable of. It should be filmed with a scene partner and should be shot at a location that makes sense with good lighting and sound. It should be edited when appropriate with multiple camera angles. A good place to start is having a wide master shot of the entire clip and one angle on or over the shoulder of the scene partner showing a closeup of the speaking performer. These shots can be edited using simple software or apps on your smartphone.</p>
-    <ul>
-      <li>Clips should be no longer than 60 seconds in length.</li>
-      <li>They should be original or un-produced material.</li>
-    </ul>
-    <p>Do not use scripts from TV or film, especially if it's well known or iconic. You want the clip to be focused on you. Do not give an opportunity for a viewer to elicit a comparison of a previous actor's performance.</p>
-    <p>Take this course for free to get two scenes ready for your profiles. Email me if interested.</p>
-    <p>Ultimately we would love to have at least one performance clip that matches every headshot uploaded of types you can play. This is a proven valuable tool to assist casting and get far more auditions!</p>
-    <p>For LA Casting you will want to upload a reel or performance clips as well. Please include an upbeat or commercial example. You may film a mock or spec commercial on a product — have fun with it and make sure it showcases your talent in the best light.</p>
-    <p>Connect with me to brainstorm ideas and receive guidance on what works. It is fun and challenging and keeps your skills sharp. Once you have footage from projects you were hired to act in, we can discuss creating a reel and posting those clips as well.</p>
-    <a class="link-btn" href="https://express.adobe.com/page/srf8IpDO7ZkIU/" target="_blank" rel="noopener">Free Access</a>
-  </section>
+      <h3>Guide Examples</h3>
+      <div class="btn-row">
+        <a class="link-btn" href="https://claude.ai/artifact/77fuDUm2LBsGRFUed47PYS" target="_blank" rel="noopener">Co-Star // Drama Episodic</a>
+        <a class="link-btn" href="https://claude.ai/artifact/MVQj3MagWNACALBA9xFrQ2" target="_blank" rel="noopener">Guest Star // Single-Cam Comedy</a>
+        <a class="link-btn" href="https://claude.ai/artifact/CFV4yg7kyT9SdMsamgVf5o" target="_blank" rel="noopener">Recurring // Drama Streaming</a>
+        <a class="link-btn" href="https://claude.ai/artifact/GcHDB3h8VxRu3LoZuUBvEz" target="_blank" rel="noopener">Lead // Family Feature</a>
+      </div>
 
-  <section id="resumes">
-    <h2>Resumes</h2>
-    <ul>
-      <li>Print at least 10 copies of your resume in case casting requests a hard copy.</li>
-      <li>Have a PDF resume on file.</li>
-    </ul>
-    <p>See the resume template for the industry standard format. Do not creatively stray too far from this resume style.</p>
-    <p>Use <a href="https://resumes.childactor101.com" target="_blank" rel="noopener">resumes.childactor101.com</a> for a fillable industry standard template and PDF download.</p>
-    <img src="billyresume1.jpg" alt="Example actor resume, industry standard format" style="max-width:100%;border-radius:8px;border:1px solid #ddd;margin-top:10px;">
-  </section>
+      <h3>Prep101</h3>
+      <figure class="fig-logo">
+        <img src="prep101-logo.png" alt="Prep101">
+      </figure>
+      <p>Prep101 is my proprietary audition prep guide tool that I usually send you automatically, free to use. Email me for a free use code.</p>
+      <div class="btn-row">
+        <a class="link-btn primary" href="https://prep101.childactor101.com" target="_blank" rel="noopener">Open Prep101</a>
+      </div>
 
-  <section id="social-media">
-    <h2>Social Media</h2>
-    <img src="socialmediahero.jpeg" alt="Social media safety awareness for young actors" style="max-width:100%;border-radius:8px;margin-bottom:14px;">
-    <p>If you have an IMDb credit, I strongly recommend subscribing to IMDbPro. It allows you to upload photos, a bio, video clips, and more, making it a valuable tool in the industry and adding credibility to your profile. However, ignore the IMDb Star Meter ranking — it has zero impact on your casting potential or industry worth. It's just an algorithm driven by factors beyond your control, and no one in casting takes it seriously.</p>
-    <p>I highly recommend securing a website with your name as the domain, if possible. At the very least, purchase the domain name immediately. Once you gain any level of success, others may buy it first and demand a hefty price to sell it back to you. Owning your domain gives you control over your online presence and how you appear in Google searches. If you're unsure what your website should include, let's discuss the best approach for you.</p>
-    <a class="link-btn" href="http://www.zandergrable.com/" target="_blank" rel="noopener">Actor Website Example</a>
-    <p>I can create your website for you. I use Namecheap domains and Carrd.co to host and build the site. It will cost you about $25 to maintain each year.</p>
-    <p>Whether or not to create or maintain social media profiles on Instagram, TikTok, Facebook, or X is entirely a personal choice for parents. In my opinion, having a massive following is not necessary. Despite what some may claim, I have never seen an actor lose out on a role because of their social media presence — or lack thereof. While influencer-driven jobs exist, major TV and film roles that truly matter for an actor's career are not awarded based on follower counts.</p>
-    <a class="link-btn" href="https://www.childactor101.com/101-blog/the-instagram-dilemma-why-child-actors-dont-need-social-media-accounts-to-succeed?rq=social%20media" target="_blank" rel="noopener">Blog Post on Social Media</a>
-    <p>A child's social media accounts should be managed and monitored by parents or a trusted public relations firm. Keep personal and professional accounts separate — your acting profile should focus solely on your career. Social media can be a powerful networking tool, offering opportunities to connect with fans, fellow actors, and industry professionals. Use it strategically and professionally!</p>
-    <p>Please don't get caught up in the social media frenzy surrounding young actors. I couldn't care less how many followers you have — it has nothing to do with your talent or credibility. It's easy to fall into the trap of prioritizing Instagram clout, but be mindful and stay humble. Hype is just that — hype. "Instafame" is not the goal, nor should it be your focus.</p>
-    <p>I represent actors who are in this for the craft — performers who dream of winning Oscars and building lasting careers, not chasing fleeting internet validation. I want a roster of professionals who are dedicated to the work, not the illusion of success.</p>
-    <p>Be strategic, be genuine, and always present yourself with humility. Desperation is a career killer — trust me on that. Yes, red carpet events can be exciting and offer networking opportunities, but they are not your priority. Your job is to audition, improve, and grow as an actor. If that ever becomes secondary to social media status, it's time for a serious reality check.</p>
-  </section>
+      <h3>Reader101</h3>
+      <figure class="fig-logo">
+        <img src="reader101-logo.png" alt="Reader101">
+      </figure>
+      <p>Reader101 is a tool to guide the reader on the best way to approach the sides and support the actor, free to use. Email me for a free use code.</p>
+      <div class="btn-row">
+        <a class="link-btn primary" href="https://reader101.childactor101.com" target="_blank" rel="noopener">Open Reader101</a>
+        <a class="link-btn" href="ben_reader_support_guide.html" target="_blank" rel="noopener">See an Example Guide</a>
+      </div>
+    </section>
 
-  <section id="training">
-    <h2>Training</h2>
-    <ul>
-      <li>Every actor should be in constant pursuit to improve their skills.</li>
-      <li>Do not get complacent, ever.</li>
-      <li>You should be training always, and with reputable instructors.</li>
-      <li>Casting will look at current training the same as credits when you are developmental.</li>
-      <li>With the exception of actors under 8 (determined case by case), every client should be in at least one weekly class — preferably an audition technique class with on-camera scene study.</li>
-      <li>Additionally I would encourage commercial workshops and casting workshops.</li>
-      <li>I also highly recommend improv classes.</li>
-    </ul>
-  </section>
+    <section class="section" id="self-tape">
+      <p class="sec-eyebrow">Auditions &amp; Work</p>
+      <h2>Self Tape Auditions</h2>
+      <p>An important part of my duties as your manager is to review your self tape auditions before they are sent to the agency or uploaded to Actors Access. If possible, I try to watch them before the deadline to give notes or changes if necessary.</p>
+      <p>You can share your self tape auditions with me by sending the files via <a href="https://www.wetransfer.com/" target="_blank" rel="noopener">WeTransfer</a>, or by creating a Google Drive sub folder.</p>
+      <div class="callout important">
+        <span class="callout-label">Important</span>
+        <p>I do not get access to view self tapes that are uploaded by the client to Actors Access. The agent can watch, approve, and submit — but I would have no access to that. Please make it a priority to send self tapes to me for review before the deadline. I know that's not always going to be reality, but we can make an effort.</p>
+      </div>
+      <figure>
+        <img src="perfectselftapecourse.jpeg" alt="The Perfect Self Tape — a complete guided course for parents">
+      </figure>
+      <div class="btn-row">
+        <a class="link-btn primary" href="https://express.adobe.com/page/4N3CH5BgyUPgp/" target="_blank" rel="noopener">Free Access</a>
+      </div>
+    </section>
 
-  <section id="coaching">
-    <h2>Coaching</h2>
-    <p>You should be in continuous coaching as well. I am available occasionally for coaching sessions (free of charge) when you have an important audition. It is my passion and pleasure. But my goal is for everyone to find a trusted coach that you can work with consistently or when needed. I can recommend names. I require all TV and film roles larger than a co-star to be coached prior to the audition. This is not negotiable — you must prepare and be competitive.</p>
-    <p>Discuss any classes or coaches with me prior to signing up. I have a wealth of knowledge and recommendations to offer and can determine what the best fit for your individual needs are. I can also recommend classes and coaches that fit your budget.</p>
-  </section>
+    <section class="section" id="out-of-state">
+      <p class="sec-eyebrow">Auditions &amp; Work</p>
+      <h2>Out of State Clients</h2>
+      <ul>
+        <li>Every effort will be made to get you self tape auditions instead of in the room, if they offer an option.</li>
+        <li>You will only be submitted for guest star and larger roles on episodic TV productions.</li>
+        <li>All significant SAG film roles.</li>
+        <li>I will not submit you on commercials, co-star or non-union projects unless you are in the area.</li>
+      </ul>
+    </section>
 
-  <section id="headshots">
-    <h2>Headshots</h2>
-    <p>Headshots are the most important marketing tool you have and should be given a lot of care and attention. Kids under 15 should get updated photos twice a year at least. Every actor should update looks once a year, or when you significantly change your appearance, or when you need to reevaluate your tools if facing a slump in activity.</p>
-    <p>I am extremely opinionated about headshots. I am a former photographer with years of experience in this field and I know what photos work. I am an advocate of spending as much as you can afford on this essential tool. Headshots are the key to getting you opportunities. Be competitive and have amazing photos.</p>
-    <p>Here is a recommendation list of photographers at various price points that will deliver the type of photo that fits your needs and style.</p>
-    <a class="link-btn" href="https://childactor101.notion.site/Headshot-Photographers-19fa1d86e651804f856bf532495d6505" target="_blank" rel="noopener">Corey's Photographer Picks</a>
-    <a class="link-btn" href="https://go.childactor101.com/hEAd" target="_blank" rel="noopener">Headshot Guide</a>
-    <img src="headshotguide.jpeg" alt="Headshot Guide — getting this wrong can be an expensive lesson" style="max-width:100%;border-radius:8px;margin-top:14px;">
-  </section>
+    <!-- ===== GROWING YOUR CAREER ===== -->
+    <section class="section" id="training">
+      <p class="sec-eyebrow">Growing Your Career</p>
+      <h2>Training</h2>
+      <ul>
+        <li>Every actor should be in constant pursuit to improve their skills.</li>
+        <li>Do not get complacent, ever.</li>
+        <li>You should be training always, and with reputable instructors.</li>
+        <li>Casting will look at current training the same as credits when you are developmental.</li>
+        <li>With the exception of actors under 8 (determined case by case), every client should be in at least one weekly class — preferably an audition technique class with on-camera scene study.</li>
+        <li>Additionally I would encourage commercial workshops and casting workshops.</li>
+        <li>I also highly recommend improv classes.</li>
+      </ul>
+    </section>
 
-  <section id="communication">
-    <h2>Communication</h2>
-    <p>Communication is key to a successful relationship. This is a fast paced business and often times I am under the gun to get a response to casting or production. Please try your best to return messages promptly. Neither of us want to miss out on an opportunity. I am reachable by phone, text and email. My "business hours" are 10am to 8pm. I will do my best to reach you after those hours and on weekends, but understand I am a family man as well.</p>
-    <h3>Best Ways to Reach Corey</h3>
-    <img src="four-ce.jpeg" alt="Use the FOUR-CE to get Corey's attention: text, email, Facebook Messenger, or call" style="max-width:320px;border-radius:8px;display:block;margin:0 auto 16px;">
-    <ul>
-      <li>I encourage you to knock on all my doors — never feel like you are bugging me!</li>
-      <li>Call me if facing an urgent matter: 559-572-3897 or 323-593-6442.</li>
-      <li>Leave a VM, followed by a text (559#) if I do not answer.</li>
-      <li>FB Messenger works as an additional backup.</li>
-      <li>Try a Bohemia assistant as well.</li>
-    </ul>
-    <p>Please send any pertinent information via email and keep text to chat and simple requests or updates. Email is essential to me when needing to look up info — I use my Gmail as a search box for my life.</p>
-    <p>I am the first to admit that I am not very speedy and can be forgetful in returning communication. It's a constant goal to become more efficient at this. Please keep nudging me if you haven't heard back. We will get a rhythm!</p>
-  </section>
+    <section class="section" id="coaching">
+      <p class="sec-eyebrow">Growing Your Career</p>
+      <h2>Coaching</h2>
+      <p>You should be in continuous coaching as well. I am available occasionally for coaching sessions (free of charge) when you have an important audition. It is my passion and pleasure. But my goal is for everyone to find a trusted coach that you can work with consistently or when needed. I can recommend names.</p>
+      <div class="callout important">
+        <span class="callout-label">Not negotiable</span>
+        <p>I require all TV and film roles larger than a co-star to be coached prior to the audition. You must prepare and be competitive.</p>
+      </div>
+      <p>Discuss any classes or coaches with me prior to signing up. I have a wealth of knowledge and recommendations to offer and can determine what the best fit for your individual needs are. I can also recommend classes and coaches that fit your budget.</p>
+    </section>
 
-  <section id="out-of-state">
-    <h2>Out of State Clients</h2>
-    <ul>
-      <li>Every effort will be made to get you self tape auditions instead of in the room, if they offer an option.</li>
-      <li>You will only be submitted for guest star and larger roles on episodic TV productions.</li>
-      <li>All significant SAG film roles.</li>
-      <li>I will not submit you on commercials, co-star or non-union projects unless you are in the area.</li>
-    </ul>
-  </section>
+    <section class="section" id="agents">
+      <p class="sec-eyebrow">Growing Your Career</p>
+      <h2>Agents</h2>
+      <p>If you already have agency representation, all communication with them will be handled via email. As your manager, I am the central hub of your team — everything goes through me first, including auditions, self-tapes, schedules, and material approvals. Agents expect and prefer this, especially when working with child actors and their parents. If you receive direct communication that leaves me out, make sure to loop me in via email. This applies to regional agencies as well.</p>
+      <p>Managers are deeply invested in every aspect of your entertainment career. If you don't yet have an agent, our first priority — if desired — will be securing a commercial agent. Once you're ready for representation at established agencies, I will pitch you at the right time to set up meetings. There is no need to stress about agents — you will get one when the time is right.</p>
+      <p>On the theatrical side, you are fully covered by Bohemia. Theatrical agents — especially those in adult departments — are looking for credited, specialized actors. My focus is on developing you to a point where you are a strong candidate for agency representation. Trust the process and be patient.</p>
+    </section>
 
-  <section id="commissions">
-    <h2>Commissions</h2>
-    <p>We all love getting paid. And even if it's $10 it still feels nice. Sometimes managers can work for a client for one to two years without receiving a dime.</p>
-    <p><strong>Remit 10% of the total gross to Bohemia as soon as you get paid.</strong> Please reach out to Corey or the assistant directly for current payment details (Zelle, Venmo, PayPal, ACH or check) — see <a href="#contact">Contact</a> below.</p>
-  </section>
+    <section class="section" id="networking">
+      <p class="sec-eyebrow">Growing Your Career</p>
+      <h2>Networking</h2>
+      <p>One vital and often overlooked job of actors is networking. It is so important! Please take time at least once a quarter to send an email, postcard, direct message, etc. to your database of industry contacts. This includes casting directors you have met or want to meet, agents, producers, etc. I can give plenty of advice and ideas.</p>
+      <div class="callout tip">
+        <span class="callout-label">Every message should include</span>
+        <p>A purpose, plus a photo, casting profile link, video link, and my email address.</p>
+      </div>
+    </section>
 
-  <section id="networking">
-    <h2>Networking</h2>
-    <p>One vital and often overlooked job of actors is networking. It is so important! Please take time at least once a quarter to send an email, postcard, direct message, etc. to your database of industry contacts. This includes casting directors you have met or want to meet, agents, producers, etc. I can give plenty of advice and ideas. Each message should have a purpose and always include a photo, casting profile link, video link, and my email address.</p>
-  </section>
+    <section class="section" id="cpp">
+      <p class="sec-eyebrow">Growing Your Career</p>
+      <h2>CPP (formerly CHSPE)</h2>
+      <p>If and when you are 16 and a sophomore in high school, it is very important to take the California High School Proficiency Exam in order to become legal 18 and stay competitive in this market.</p>
+      <p>It is a huge advantage to your career. It does not mean emancipation, nor does it end your high school education. Register and study early — the exam is offered 3x a year only.</p>
+      <div class="btn-row">
+        <a class="link-btn" href="https://www.cde.ca.gov/ta/tg/cp.asp" target="_blank" rel="noopener">California CPP</a>
+      </div>
+    </section>
 
-  <section id="meet">
-    <h2>Meet With Corey</h2>
-    <p>I like to have official in-person or video chat meetings at least once a year to set goals and discuss any and all issues we are facing. It's very important to have these to keep our team aligned. November or May are ideal meeting times.</p>
-  </section>
+    <section class="section" id="social-media">
+      <p class="sec-eyebrow">Growing Your Career</p>
+      <h2>Social Media</h2>
+      <figure>
+        <img src="socialmediahero.jpeg" alt="Social media safety awareness for young actors">
+      </figure>
+      <p>If you have an IMDb credit, I strongly recommend subscribing to IMDbPro. It allows you to upload photos, a bio, video clips, and more, making it a valuable tool in the industry and adding credibility to your profile. However, ignore the IMDb Star Meter ranking — it has zero impact on your casting potential or industry worth. It's just an algorithm driven by factors beyond your control, and no one in casting takes it seriously.</p>
+      <p>I highly recommend securing a website with your name as the domain, if possible. At the very least, purchase the domain name immediately. Once you gain any level of success, others may buy it first and demand a hefty price to sell it back to you. Owning your domain gives you control over your online presence and how you appear in Google searches. If you're unsure what your website should include, let's discuss the best approach for you.</p>
+      <p>I can create your website for you. I use Namecheap domains and Carrd.co to host and build the site. It will cost you about $25 to maintain each year.</p>
+      <div class="btn-row">
+        <a class="link-btn" href="http://www.zandergrable.com/" target="_blank" rel="noopener">Actor Website Example</a>
+      </div>
+      <p>Whether or not to create or maintain social media profiles on Instagram, TikTok, Facebook, or X is entirely a personal choice for parents. In my opinion, having a massive following is not necessary. Despite what some may claim, I have never seen an actor lose out on a role because of their social media presence — or lack thereof. While influencer-driven jobs exist, major TV and film roles that truly matter for an actor's career are not awarded based on follower counts.</p>
+      <div class="btn-row">
+        <a class="link-btn" href="https://www.childactor101.com/101-blog/the-instagram-dilemma-why-child-actors-dont-need-social-media-accounts-to-succeed?rq=social%20media" target="_blank" rel="noopener">Blog Post on Social Media</a>
+      </div>
+      <p>A child's social media accounts should be managed and monitored by parents or a trusted public relations firm. Keep personal and professional accounts separate — your acting profile should focus solely on your career. Social media can be a powerful networking tool, offering opportunities to connect with fans, fellow actors, and industry professionals. Use it strategically and professionally!</p>
+      <p>Please don't get caught up in the social media frenzy surrounding young actors. I couldn't care less how many followers you have — it has nothing to do with your talent or credibility. It's easy to fall into the trap of prioritizing Instagram clout, but be mindful and stay humble. Hype is just that — hype. "Instafame" is not the goal, nor should it be your focus.</p>
+      <p>I represent actors who are in this for the craft — performers who dream of winning Oscars and building lasting careers, not chasing fleeting internet validation. I want a roster of professionals who are dedicated to the work, not the illusion of success.</p>
+      <p>Be strategic, be genuine, and always present yourself with humility. Desperation is a career killer — trust me on that. Yes, red carpet events can be exciting and offer networking opportunities, but they are not your priority. Your job is to audition, improve, and grow as an actor. If that ever becomes secondary to social media status, it's time for a serious reality check.</p>
+    </section>
 
-  <section id="cpp">
-    <h2>CPP (formerly CHSPE)</h2>
-    <p>If and when you are 16 and a sophomore in high school, it is very important to take the California High School Proficiency Exam in order to become legal 18 and stay competitive in this market.</p>
-    <a class="link-btn" href="https://www.cde.ca.gov/ta/tg/cp.asp" target="_blank" rel="noopener">California CPP</a>
-    <p>It is a huge advantage to your career. It does not mean emancipation, nor does it end your high school education. Register and study early — the exam is offered 3x a year only.</p>
-  </section>
+    <!-- ===== WORKING WITH COREY ===== -->
+    <section class="section" id="communication">
+      <p class="sec-eyebrow">Working With Corey</p>
+      <h2>Communication</h2>
+      <p>Communication is key to a successful relationship. This is a fast paced business and often times I am under the gun to get a response to casting or production. Please try your best to return messages promptly. Neither of us want to miss out on an opportunity. I am reachable by phone, text and email. My "business hours" are 10am to 8pm. I will do my best to reach you after those hours and on weekends, but understand I am a family man as well.</p>
 
-  <section id="agents">
-    <h2>Agents</h2>
-    <p>If you already have agency representation, all communication with them will be handled via email. As your manager, I am the central hub of your team — everything goes through me first, including auditions, self-tapes, schedules, and material approvals. Agents expect and prefer this, especially when working with child actors and their parents. If you receive direct communication that leaves me out, make sure to loop me in via email. This applies to regional agencies as well.</p>
-    <p>Managers are deeply invested in every aspect of your entertainment career. If you don't yet have an agent, our first priority — if desired — will be securing a commercial agent. Once you're ready for representation at established agencies, I will pitch you at the right time to set up meetings. There is no need to stress about agents — you will get one when the time is right.</p>
-    <p>On the theatrical side, you are fully covered by Bohemia. Theatrical agents — especially those in adult departments — are looking for credited, specialized actors. My focus is on developing you to a point where you are a strong candidate for agency representation. Trust the process and be patient.</p>
-  </section>
+      <h3>Best Ways to Reach Corey</h3>
+      <figure class="fig-narrow center">
+        <img src="four-ce.jpeg" alt="Use the FOUR-CE to get Corey's attention: text, email, Facebook Messenger, or call">
+      </figure>
+      <div class="callout tip">
+        <span class="callout-label">Knock on all my doors</span>
+        <p>Never feel like you are bugging me!</p>
+      </div>
+      <ul>
+        <li>Call me if facing an urgent matter: <a href="tel:+15595723897">559-572-3897</a> or <a href="tel:+13235936442">323-593-6442</a>.</li>
+        <li>Leave a VM, followed by a text (559#) if I do not answer.</li>
+        <li>FB Messenger works as an additional backup.</li>
+        <li>Try a Bohemia assistant as well.</li>
+      </ul>
+      <p>Please send any pertinent information via email and keep text to chat and simple requests or updates. Email is essential to me when needing to look up info — I use my Gmail as a search box for my life.</p>
+      <p>I am the first to admit that I am not very speedy and can be forgetful in returning communication. It's a constant goal to become more efficient at this. Please keep nudging me if you haven't heard back. We will get a rhythm!</p>
+    </section>
 
-  <section id="facebook-group" style="overflow:auto;">
-    <h2>Facebook Group</h2>
-    <img src="fb.jpeg" alt="Facebook" style="max-width:100%;border-radius:8px;margin-bottom:16px;">
-    <p><img src="101logo.jpeg" alt="Child Actor 101" style="max-width:90px;float:left;margin:0 14px 8px 0;">I founded and moderate a resource group called Child Actor 101. Please join and take advantage of the community and wealth of information.</p>
-    <p style="clear:left;"><img src="goonies.jpeg" alt="Goonies Never Say Die" style="max-width:120px;float:left;margin:0 14px 8px 0;">I created a group for my roster as well. It is called The Goonies. I urge you to join — it is the easiest way to communicate with my roster all at once.</p>
-  </section>
+    <section class="section" id="commissions">
+      <p class="sec-eyebrow">Working With Corey</p>
+      <h2>Commissions</h2>
+      <p>We all love getting paid. And even if it's $10 it still feels nice. Sometimes managers can work for a client for one to two years without receiving a dime.</p>
+      <div class="callout important">
+        <span class="callout-label">The rate</span>
+        <p>Remit <strong>10% of the total gross</strong> to Bohemia as soon as you get paid.</p>
+      </div>
+      <p>Please reach out to Corey or the assistant directly for current payment details (Zelle, Venmo, PayPal, ACH or check) — see <a href="#contact">Contact</a> below.</p>
+    </section>
 
-  <section id="services-memo">
-    <h2>Services Memo</h2>
-    <p>While I have expertise in coaching, writing, photography, retouching, graphic arts, video editing, and more, I am not obligated or responsible for providing these services to my clients. I often offer extra help out of convenience and a genuine desire to support you, but please make an effort to seek vendors rather than relying on me for everything. I enjoy going the extra mile, but my schedule doesn't always allow it.</p>
-  </section>
+    <section class="section" id="meet">
+      <p class="sec-eyebrow">Working With Corey</p>
+      <h2>Meet With Corey</h2>
+      <p>I like to have official in-person or video chat meetings at least once a year to set goals and discuss any and all issues we are facing. It's very important to have these to keep our team aligned.</p>
+      <div class="callout tip">
+        <span class="callout-label">Best timing</span>
+        <p>November or May are ideal meeting times.</p>
+      </div>
+    </section>
 
-  <section id="vendor-directory">
-    <h2>Vendor Directory</h2>
-    <p>Utilize the resource <a href="https://directory.childactor101.com" target="_blank" rel="noopener">directory.childactor101.com</a> to find vendors, coaches, classes, services and more.</p>
-  </section>
+    <section class="section" id="pet-peeves">
+      <p class="sec-eyebrow">Working With Corey</p>
+      <h2>Pet Peeves &amp; What I Love</h2>
+      <h3>My Pet Peeves</h3>
+      <ol>
+        <li>Not being informed about auditions, callbacks or bookings (whether paid or not).</li>
+        <li>Late or no-show to castings. It makes me look bad!</li>
+        <li>Having to ask more than twice for new or updated materials.</li>
+        <li>Not being informed of bookout dates.</li>
+        <li>Constant second guessing by parents of advice or information given.</li>
+      </ol>
+      <h3>I Do Love</h3>
+      <ul>
+        <li>Video/voice updates after auditions and jobs.</li>
+        <li>Getting to know everyone better in any way possible — it helps a lot in representing my clients.</li>
+        <li>Tags on social media.</li>
+        <li>Photos, photos, photos, always!</li>
+        <li>Invites to plays, showcases and screenings.</li>
+        <li>Actor referrals to talent you meet and trust.</li>
+        <li>Calls &amp; visits that are not about Hollywood!</li>
+      </ul>
+    </section>
 
-  <section id="coaching-education">
-    <h2>Coaching &amp; Education</h2>
-    <p>To fulfill my passion for teaching and performance — while also supplementing my income — I offer coaching and online classes. I occasionally host special educational events for parents as well. Clients never have to pay for coaching or group classes; charging for these services would be unethical. However, since my availability is limited and structured, coaching is only offered on a case-by-case basis. When necessary, I prioritize making time for my clients, and I regularly offer free spots in my classes when possible.</p>
-  </section>
+    <section class="section" id="services-memo">
+      <p class="sec-eyebrow">Working With Corey</p>
+      <h2>Services Memo</h2>
+      <p>While I have expertise in coaching, writing, photography, retouching, graphic arts, video editing, and more, I am not obligated or responsible for providing these services to my clients. I often offer extra help out of convenience and a genuine desire to support you, but please make an effort to seek vendors rather than relying on me for everything. I enjoy going the extra mile, but my schedule doesn't always allow it.</p>
+    </section>
 
-  <section id="blog">
-    <h2>The Blog</h2>
-    <p>There is a wealth of articles that I post on the Child Actor 101 website — a good resource on a great many pertinent topics for navigating the industry.</p>
-    <a class="link-btn" href="https://www.childactor101.com/101-blog" target="_blank" rel="noopener">Blog</a>
-  </section>
+    <!-- ===== RESOURCES ===== -->
+    <section class="section" id="vendor-directory">
+      <p class="sec-eyebrow">Resources</p>
+      <h2>Vendor Directory</h2>
+      <p>Utilize the resource directory to find vendors, coaches, classes, services and more.</p>
+      <div class="btn-row">
+        <a class="link-btn primary" href="https://directory.childactor101.com" target="_blank" rel="noopener">directory.childactor101.com</a>
+      </div>
+    </section>
 
-  <section id="pet-peeves">
-    <h2>Pet Peeves &amp; What I Love</h2>
-    <h3>My Pet Peeves</h3>
-    <ol>
-      <li>Not being informed about auditions, callbacks or bookings (whether paid or not).</li>
-      <li>Late or no-show to castings. It makes me look bad!</li>
-      <li>Having to ask more than twice for new or updated materials.</li>
-      <li>Not being informed of bookout dates.</li>
-      <li>Constant second guessing by parents of advice or information given.</li>
-    </ol>
-    <h3>I Do Love</h3>
-    <ul>
-      <li>Video/voice updates after auditions and jobs.</li>
-      <li>Getting to know everyone better in any way possible — it helps a lot in representing my clients.</li>
-      <li>Tags on social media.</li>
-      <li>Photos, photos, photos, always!</li>
-      <li>Invites to plays, showcases and screenings.</li>
-      <li>Actor referrals to talent you meet and trust.</li>
-      <li>Calls &amp; visits that are not about Hollywood!</li>
-    </ul>
-  </section>
+    <section class="section" id="facebook-group">
+      <p class="sec-eyebrow">Resources</p>
+      <h2>Facebook Groups</h2>
+      <figure>
+        <img src="fb.jpeg" alt="Facebook">
+      </figure>
+      <div class="media-row">
+        <img src="101logo.jpeg" alt="Child Actor 101">
+        <p>I founded and moderate a resource group called <strong>Child Actor 101</strong>. Please join and take advantage of the community and wealth of information.</p>
+      </div>
+      <div class="media-row">
+        <img src="goonies.jpeg" alt="Goonies Never Say Die">
+        <p>I created a group for my roster as well. It is called <strong>The Goonies</strong>. I urge you to join — it is the easiest way to communicate with my roster all at once.</p>
+      </div>
+    </section>
 
-  <section id="contact" class="contact-block">
-    <h2 style="border:none;color:#fff;">Corey Ralston</h2>
-    <p>323-593-6442 — Office &nbsp;//&nbsp; 559-572-3897 — Cell</p>
-    <p>Email: <a href="mailto:corey@bohemiaent.com">corey@bohemiaent.com</a></p>
-    <p>Assistant: <a href="mailto:assistant@bohemiaent.com">assistant@bohemiaent.com</a></p>
-  </section>
-</main>
+    <section class="section" id="coaching-education">
+      <p class="sec-eyebrow">Resources</p>
+      <h2>Coaching &amp; Education</h2>
+      <p>To fulfill my passion for teaching and performance — while also supplementing my income — I offer coaching and online classes. I occasionally host special educational events for parents as well. Clients never have to pay for coaching or group classes; charging for these services would be unethical. However, since my availability is limited and structured, coaching is only offered on a case-by-case basis. When necessary, I prioritize making time for my clients, and I regularly offer free spots in my classes when possible.</p>
+    </section>
 
-<footer>
-  Bohemia Jr. &middot; onboarding.bohemiajr.site
-</footer>
+    <section class="section" id="blog">
+      <p class="sec-eyebrow">Resources</p>
+      <h2>The Blog</h2>
+      <p>There is a wealth of articles that I post on the Child Actor 101 website — a good resource on a great many pertinent topics for navigating the industry.</p>
+      <div class="btn-row">
+        <a class="link-btn primary" href="https://www.childactor101.com/101-blog" target="_blank" rel="noopener">Read the Blog</a>
+      </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <div class="contact-card" id="contact">
+      <h2>Corey Ralston</h2>
+      <p class="role">Bohemia Jr.</p>
+      <div class="contact-links">
+        <a href="tel:+13235936442">
+          <span class="cl-label">Office</span>
+          <span class="cl-value">323-593-6442</span>
+        </a>
+        <a href="tel:+15595723897">
+          <span class="cl-label">Cell</span>
+          <span class="cl-value">559-572-3897</span>
+        </a>
+        <a href="mailto:corey@bohemiaent.com">
+          <span class="cl-label">Email</span>
+          <span class="cl-value">corey@bohemiaent.com</span>
+        </a>
+        <a href="mailto:assistant@bohemiaent.com">
+          <span class="cl-label">Assistant</span>
+          <span class="cl-value">assistant@bohemiaent.com</span>
+        </a>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<button class="to-top" id="toTop" aria-label="Back to top">↑</button>
+
+<footer>Bohemia Jr. &middot; onboarding.bohemiajr.site</footer>
+
+<script>
+(function () {
+  var sidebar = document.getElementById('sidebar');
+  var navToggle = document.getElementById('navToggle');
+  var scrim = document.getElementById('scrim');
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.side-nav a'));
+  var toTop = document.getElementById('toTop');
+  var progressFill = document.getElementById('progressFill');
+
+  /* ---- mobile drawer ---- */
+  function closeNav() {
+    sidebar.classList.remove('open');
+    scrim.classList.remove('show');
+    navToggle.setAttribute('aria-expanded', 'false');
+  }
+  function toggleNav() {
+    var open = sidebar.classList.toggle('open');
+    scrim.classList.toggle('show', open);
+    navToggle.setAttribute('aria-expanded', String(open));
+  }
+  navToggle.addEventListener('click', toggleNav);
+  scrim.addEventListener('click', closeNav);
+  navLinks.forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (window.innerWidth <= 900) closeNav();
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeNav();
+  });
+
+  /* ---- scroll spy ---- */
+  var targets = navLinks
+    .map(function (a) { return document.querySelector(a.getAttribute('href')); })
+    .filter(Boolean);
+
+  function setActive(id) {
+    navLinks.forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    var visible = {};
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        visible[entry.target.id] = entry.isIntersecting;
+      });
+      var current = targets.filter(function (t) { return visible[t.id]; })[0];
+      if (current) setActive(current.id);
+    }, { rootMargin: '-80px 0px -65% 0px', threshold: 0 });
+    targets.forEach(function (t) { spy.observe(t); });
+  }
+
+  /* ---- progress + back to top ---- */
+  function onScroll() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    progressFill.style.width = pct + '%';
+    toTop.classList.toggle('show', h.scrollTop > 600);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  toTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ---- search filter ---- */
+  var search = document.getElementById('navSearch');
+  var navEmpty = document.getElementById('navEmpty');
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.nav-group'));
+
+  var haystacks = navLinks.map(function (a) {
+    var sec = document.querySelector(a.getAttribute('href'));
+    var text = (a.textContent + ' ' + (sec ? sec.textContent : '')).toLowerCase();
+    return { link: a, text: text };
+  });
+
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    var hits = 0;
+    haystacks.forEach(function (item) {
+      var match = !q || item.text.indexOf(q) !== -1;
+      item.link.style.display = match ? '' : 'none';
+      if (match) hits++;
+    });
+    groups.forEach(function (g) {
+      var anyVisible = Array.prototype.some.call(g.querySelectorAll('a'), function (a) {
+        return a.style.display !== 'none';
+      });
+      g.style.display = anyVisible ? '' : 'none';
+    });
+    navEmpty.style.display = hits === 0 ? 'block' : 'none';
+  });
+
+  /* ---- interactive checklist (per-device, localStorage) ---- */
+  var STORE = 'bohemiajr.checklist.v1';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('#checkItems input'));
+  var bar = document.getElementById('checkBar');
+  var count = document.getElementById('checkCount');
+  var reset = document.getElementById('checkReset');
+
+  function load() {
+    try {
+      return JSON.parse(localStorage.getItem(STORE) || '{}') || {};
+    } catch (e) { return {}; }
+  }
+  function save(state) {
+    try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {}
+  }
+  function render() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    bar.style.width = (done / boxes.length * 100) + '%';
+    count.textContent = done + ' of ' + boxes.length;
+  }
+
+  var state = load();
+  boxes.forEach(function (b) {
+    if (state[b.dataset.key]) b.checked = true;
+    b.addEventListener('change', function () {
+      var s = load();
+      s[b.dataset.key] = b.checked;
+      save(s);
+      render();
+    });
+  });
+  reset.addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    save({});
+    render();
+  });
+  render();
+})();
+</script>
 
 </body>
 </html>
