@@ -213,6 +213,23 @@
   .fact dd { margin: 0; font-weight: 600; font-size: .98rem; }
   .fact dd.mono { font-family: 'Special Elite', monospace; letter-spacing: .04em; }
 
+  /* ---------- resource grid (classes / coaches) ---------- */
+  .resource-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px; margin: 0 0 18px;
+  }
+  .resource-card {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--dim); border-radius: 10px; padding: 12px 14px;
+    text-decoration: none; color: var(--ink); border: 1px solid transparent;
+  }
+  .resource-card:hover { border-color: var(--sky); background: var(--sky-wash); }
+  .resource-card img {
+    width: 30px; height: 30px; border-radius: 7px; flex: none;
+    object-fit: contain; background: #fff; border: 1px solid var(--line);
+  }
+  .resource-card span { font-size: .88rem; font-weight: 600; line-height: 1.3; }
+
   /* ---------- buttons ---------- */
   .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 18px; }
   .btn-row:last-child { margin-bottom: 0; }
@@ -425,6 +442,7 @@
         <a href="#agents">Agents</a>
         <a href="#networking">Networking</a>
         <a href="#cpp">CPP (formerly CHSPE)</a>
+        <a href="#imdb">IMDb</a>
         <a href="#social-media">Social Media</a>
       </div>
       <div class="nav-group">
@@ -771,6 +789,26 @@
         <p>I require all TV and film roles larger than a co-star to be coached prior to the audition. You must prepare and be competitive.</p>
       </div>
       <p>Discuss any classes or coaches with me prior to signing up. I have a wealth of knowledge and recommendations to offer and can determine what the best fit for your individual needs are. I can also recommend classes and coaches that fit your budget.</p>
+
+      <h3>Classes &amp; Coaches I Recommend</h3>
+      <div class="resource-grid">
+        <a class="resource-card" href="https://actorsite.com" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=actorsite.com&sz=64" alt=""><span>ActorSite</span></a>
+        <a class="resource-card" href="https://zakbarnett.com" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=zakbarnett.com&sz=64" alt=""><span>Zak Barnett</span></a>
+        <a class="resource-card" href="https://realactorslab.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=realactorslab.com&sz=64" alt=""><span>Real Actors Lab</span></a>
+        <a class="resource-card" href="https://enroll.laactingstudios.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=laactingstudios.com&sz=64" alt=""><span>LA Acting Studios</span></a>
+        <a class="resource-card" href="https://youngactorsspace.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=youngactorsspace.com&sz=64" alt=""><span>Young Actors Space</span></a>
+        <a class="resource-card" href="https://www.howdoiact.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=howdoiact.com&sz=64" alt=""><span>How Do I Act</span></a>
+        <a class="resource-card" href="https://www.youngactorsstudio.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=youngactorsstudio.com&sz=64" alt=""><span>Young Actors Studio</span></a>
+        <a class="resource-card" href="https://www.thewholeheartedactor.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=thewholeheartedactor.com&sz=64" alt=""><span>The Wholehearted Actor</span></a>
+        <a class="resource-card" href="https://www.jordanwoods-robinson.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=jordanwoods-robinson.com&sz=64" alt=""><span>Jordan Woods-Robinson</span></a>
+        <a class="resource-card" href="https://margiehaber.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=margiehaber.com&sz=64" alt=""><span>Margie Haber Studio</span></a>
+        <a class="resource-card" href="https://johndaquino.net/online-acting-classes/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=johndaquino.net&sz=64" alt=""><span>John Daquino</span></a>
+        <a class="resource-card" href="https://giovannieespiritu.com/acting-coach" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=giovannieespiritu.com&sz=64" alt=""><span>Giovannie Espiritu</span></a>
+        <a class="resource-card" href="https://www.gloriagarayua.com/coaching" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=gloriagarayua.com&sz=64" alt=""><span>Gloria Garayua</span></a>
+        <a class="resource-card" href="https://www.theactorsearch.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=theactorsearch.com&sz=64" alt=""><span>The Actor Search</span></a>
+        <a class="resource-card" href="https://www.instagram.com/holly_gagnier/?hl=en" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=instagram.com&sz=64" alt=""><span>Holly Gagnier</span></a>
+        <a class="resource-card" href="https://www.coachkimberlycrandall.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=coachkimberlycrandall.com&sz=64" alt=""><span>Kimberly Crandall</span></a>
+      </div>
     </section>
 
     <section class="section" id="agents">
@@ -801,13 +839,34 @@
       </div>
     </section>
 
+    <section class="section" id="imdb">
+      <p class="sec-eyebrow">Growing Your Career</p>
+      <h2>IMDb</h2>
+      <a href="https://www.imdbpro.com" target="_blank" rel="noopener">
+        <figure class="fig-logo">
+          <img src="imdbpro.png" alt="IMDbPro">
+        </figure>
+      </a>
+      <p>IMDbPro is a great subscription-based resource that is an industry standard. I encourage all clients to sign up for an account to have control over your images, videos, bio and more. You can also have access to a much wider and more detailed search on everyone in the industry, including contact information.</p>
+      <div class="callout tip">
+        <span class="callout-label">If you have a credit</span>
+        <p>If you are on IMDb with a credit, I will add you to my roster on the platform. I will also request profile editing access.</p>
+        <p>If you have a credit and are not listed, I have the ability to add that as a contributor. Reach out to me if you need help with that or have questions.</p>
+      </div>
+      <p>The STARmeter feature is not a qualified or important tool in the industry. It is novelty at best. Do not put much weight on your rating or trying to obtain a better rating. It is a fun feature that can give you ideas on what is trending, that is all.</p>
+      <div class="btn-row">
+        <a class="link-btn primary" href="https://www.imdbpro.com" target="_blank" rel="noopener">Sign Up for IMDbPro</a>
+        <a class="link-btn" href="https://imdb.me/coreyralston" target="_blank" rel="noopener">Corey's IMDb Profile</a>
+      </div>
+    </section>
+
     <section class="section" id="social-media">
       <p class="sec-eyebrow">Growing Your Career</p>
       <h2>Social Media</h2>
       <figure>
         <img src="socialmediahero.jpeg" alt="Social media safety awareness for young actors">
       </figure>
-      <p>If you have an IMDb credit, I strongly recommend subscribing to IMDbPro. It allows you to upload photos, a bio, video clips, and more, making it a valuable tool in the industry and adding credibility to your profile. However, ignore the IMDb Star Meter ranking — it has zero impact on your casting potential or industry worth. It's just an algorithm driven by factors beyond your control, and no one in casting takes it seriously.</p>
+      <p>See <a href="#imdb">IMDb</a> above for details on IMDbPro, adding credits, and why the STARmeter ranking doesn't matter.</p>
       <p>I highly recommend securing a website with your name as the domain, if possible. At the very least, purchase the domain name immediately. Once you gain any level of success, others may buy it first and demand a hefty price to sell it back to you. Owning your domain gives you control over your online presence and how you appear in Google searches. If you're unsure what your website should include, let's discuss the best approach for you.</p>
       <p>I can create your website for you. I use Namecheap domains and Carrd.co to host and build the site. It will cost you about $25 to maintain each year.</p>
       <div class="btn-row">
