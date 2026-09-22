@@ -158,6 +158,28 @@
   }
   .welcome-card p { margin: 0; }
 
+  /* ---------- meet corey ---------- */
+  .bio-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 32px; margin-bottom: 24px; box-shadow: var(--shadow);
+    display: grid; grid-template-columns: 200px 1fr; gap: 28px; align-items: start;
+    scroll-margin-top: calc(var(--topbar-h) + 20px);
+  }
+  .bio-card .sec-eyebrow { grid-column: 1 / -1; }
+  .bio-photo { width: 100%; border-radius: 12px; border: 1px solid var(--line); }
+  .bio-name-block h2 { margin: 0 0 2px; padding: 0; border: 0; font-size: 1.5rem; }
+  .bio-role {
+    font-family: 'Special Elite', monospace; font-size: .74rem; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--coral-deep); margin: 0 0 16px;
+  }
+  .bio-name-block p { margin: 0 0 14px; }
+  .bio-name-block p:last-child { margin-bottom: 0; }
+  .bio-signoff { font-family: 'Caveat', cursive; font-size: 1.5rem; color: var(--sky-deep); }
+  @media (max-width: 640px) {
+    .bio-card { grid-template-columns: 1fr; text-align: left; }
+    .bio-photo { max-width: 160px; margin: 0 auto; }
+  }
+
   /* ---------- sections ---------- */
   .section {
     background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
@@ -416,6 +438,7 @@
     <nav class="side-nav" id="sideNav" aria-label="Guide contents">
       <div class="nav-group">
         <p class="nav-group-title">Start Here</p>
+        <a href="#meet-corey">Meet Corey</a>
         <a href="#checklist">New Client Checklist</a>
         <a href="#google-drive">Google Drive</a>
         <a href="#work-permits">Work Permits / Coogan</a>
@@ -478,6 +501,22 @@
         Bohemia Jr. is the youth division of <a href="https://bohemiaent.com" target="_blank" rel="noopener">Bohemia Group</a>.
         <img src="bohemialogo.jpg" alt="Bohemia Group">
       </p>
+    </div>
+
+    <div class="bio-card" id="meet-corey">
+      <p class="sec-eyebrow">Start Here</p>
+      <img class="bio-photo" src="corey-ralston.jpg" alt="Corey Ralston">
+      <div class="bio-name-block">
+        <h2>Meet Corey</h2>
+        <p class="bio-role">Corey Ralston &middot; Youth Talent Manager &middot; Bohemia Group</p>
+        <p>Hi, I'm Corey. I'll be your manager, advocate, occasional reality check, and one of the people most invested in helping you build a lasting career in this business.</p>
+        <p>I've spent most of my life around young performers. I began as a child actor myself and today work as a youth talent manager, acting coach and founder of Child Actor 101, a resource and training community created to help young actors and their families navigate this industry with a little more knowledge and considerably less guesswork.</p>
+        <p>My approach to management is very hands-on. I care about much more than submitting you for roles. We'll work together on your materials, training, audition technique, career strategy, representation, relationships with casting, and the gradual process of figuring out exactly where you fit in the industry.</p>
+        <p>I also believe strongly in developing actors, not simply chasing bookings. A booking is wonderful. Building the skill, confidence, professionalism and individuality that can sustain a career is the bigger goal.</p>
+        <p>You'll discover pretty quickly that I communicate a lot, have opinions about almost everything, and would much rather you ask me a question than quietly wonder whether you're doing something wrong.</p>
+        <p>That's what this guide is for, too. Think of it as the owner's manual for working with me and Bohemia Jr. You don't need to memorize it. Come back whenever you need it.</p>
+        <p class="bio-signoff">Welcome to the Goonies.</p>
+      </div>
     </div>
 
     <div class="welcome-card">
